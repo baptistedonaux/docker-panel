@@ -1,0 +1,82 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+<div class="col-lg-4">
+	<h3></h3>
+
+	<table class="table table-hover table-striped">
+		<thead>
+			<th>Api Version</th>
+			<th>Arch</th>
+			<th>GitCommit</th>
+			<th>GoVersion</th>
+			<th>KernelVersion</th>
+			<th>Os</th>
+			<th>Version</th>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td>{{ version["ApiVersion"] }}</td>
+				<td>{{ version["Arch"] }}</td>
+				<td>{{ version["GitCommit"] }}</td>
+				<td>{{ version["GoVersion"] }}</td>
+				<td>{{ version["KernelVersion"] }}</td>
+				<td>{{ version["Os"] }}</td>
+				<td>{{ version["Version"] }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="col-lg-4">
+	<h3></h3>
+
+	<table class="table table-hover table-striped">
+		<thead>
+			<th>Repository</th>
+			<th>Tags</th>
+			<th>Real size</th>
+			<th>Virtual size</th>
+		</thead>
+
+		<tbody>
+			{% for image in images %}
+			<tr>
+				<td>{{ image["RepoTags"]|first|split(':')|first }}</td>
+
+				{% set tags = [] %}
+				{% for tag in image["RepoTags"] %}
+					{% set tags = tags|merge([tag|split(":")|last]) %}
+				{% endfor %}
+				<td>{{ tags|join(" | ") }}</td>
+				<td>{{ image["Size"]|filesize }}</td>
+				<td>{{ image["VirtualSize"]|filesize }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<div class="col-lg-4">
+	<h3></h3>
+
+	<table class="table table-hover table-striped">
+		<thead>
+			<th>Name</th>
+			<th>Status</th>
+			<th>Execute since</th>
+		</thead>
+
+		<tbody>
+			{% for container in containers %}
+			<tr>
+				<td>{{ container["Names"]|join(" | ") }}</td>
+				<td>{{ container["Status"] }}</td>
+				<td>{{ container["Image"] }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock body %}

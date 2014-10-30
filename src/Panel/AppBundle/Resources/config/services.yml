@@ -1,0 +1,18 @@
+services:
+    twig.filesize_extension:
+        class: Panel\AppBundle\Twig\FilesizeExtension
+        tags:
+            - { name: twig.extension }
+
+    docker.api:
+        class: Panel\AppBundle\Manager\Api\Docker
+
+    docker.api.container:
+        class: Panel\AppBundle\Manager\Api\DockerContainer
+        arguments:
+            - @docker.api
+
+    docker.api.images:
+        class: Panel\AppBundle\Manager\Api\DockerImage
+        arguments:
+            - @docker.api

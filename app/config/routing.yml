@@ -1,0 +1,5 @@
+panel_app:
+    resource: "@PanelAppBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

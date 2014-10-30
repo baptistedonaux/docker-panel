@@ -10,5 +10,7 @@
 /bin/
 /vendor/
 /web/bundles/
+/web/css/
+/web/js/
 
 /composer.lock
