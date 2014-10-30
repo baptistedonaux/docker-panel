@@ -1,0 +1,14 @@
+/app/cache/*
+/app/logs/*
+/app/config/parameters.yml
+/app/phpunit.xml
+/app/bootstrap.php.cache
+
+/!app/cache/.gitkeep
+/!app/logs/.gitkeep
+
+/bin/
+/vendor/
+/web/bundles/
+
+/composer.lock
