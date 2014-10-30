@@ -17,4 +17,19 @@ class DockerContainer
 	{
 		return Docker::decode($this->docker->get("/containers/json"));
 	}
+
+	public function stop($id)
+	{
+		$this->docker->post("/containers/".$id."/stop");
+	}
+
+	public function pause($id)
+	{
+		$this->docker->post("/containers/".$id."/pause");
+	}
+
+	public function play($id)
+	{
+		$this->docker->post("/containers/".$id."/unpause");
+	}
 }

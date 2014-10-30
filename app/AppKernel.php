@@ -8,6 +8,8 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),

@@ -9,7 +9,11 @@
     "require": {
         "php": ">=5.3.3",
 
+        "friendsofsymfony/jsrouting-bundle": "@stable",
+
         "incenteev/composer-parameter-handler": "~2.0",
+
+        "leafo/lessphp": "0.4.*",
 
         "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0",

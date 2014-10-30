@@ -1,0 +1,28 @@
+.data-action(@color) {
+	cursor: pointer;
+	color: @color;
+	transition: 0.5s ease;
+
+	&:hover {
+		color: @color;
+		transition: 0.5s ease;
+	}
+}
+
+div.col-lg-4 {
+	height: 100%;
+	overflow-y: auto;
+	position: fixed;
+}
+
+[data-remove], [data-stop] {
+	.data-action(red);
+}
+
+[data-pause] {
+	.data-action(orange);
+}
+
+[data-play] {
+	.data-action(green);
+}

@@ -5,7 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             {% stylesheets
-                '@PanelAppBundle/Resources/public/bootstrap-3.3.0/css/bootstrap.min.css'
+                'bundles/panelapp/bootstrap-3.3.0/css/bootstrap.min.css'
             filter='cssrewrite' %}
             <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
             {% endstylesheets %}
@@ -17,10 +17,13 @@
 
         {% block javascripts %}
             {% javascripts
+                '@PanelAppBundle/Resources/public/js/jquery-2.1.1.min.js'
                 '@PanelAppBundle/Resources/public/bootstrap-3.3.0/js/bootstrap.min.js'
+                "@FOSJsRoutingBundle/Resources/public/js/router.js"
             %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         {% endblock %}
     </body>
 </html>

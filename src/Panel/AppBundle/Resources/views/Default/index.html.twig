@@ -1,37 +1,82 @@
 {% extends "::base.html.twig" %}
 
+{% block javascripts %}
+	{{ parent() }}
+    
+    {% javascripts
+        '@PanelAppBundle/Resources/public/js/index.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+    {% stylesheets
+        '@PanelAppBundle/Resources/public/stylesheet/index.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block body %}
 <div class="col-lg-4">
-	<h3></h3>
-
 	<table class="table table-hover table-striped">
-		<thead>
-			<th>Api Version</th>
-			<th>Arch</th>
-			<th>GitCommit</th>
-			<th>GoVersion</th>
-			<th>KernelVersion</th>
-			<th>Os</th>
-			<th>Version</th>
-		</thead>
-
 		<tbody>
 			<tr>
-				<td>{{ version["ApiVersion"] }}</td>
+				<td>
+					<strong>Api Version</strong>
+				</td>
+				<td>
+					<a href="https://docs.docker.com/reference/api/docker_remote_api_v{{ version["ApiVersion"] }}">{{ version["ApiVersion"] }}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Arch</strong>
+				</td>
 				<td>{{ version["Arch"] }}</td>
-				<td>{{ version["GitCommit"] }}</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>GitCommit</strong>
+				</td>
+				<td>
+					<a href="https://github.com/docker/docker/commit/{{ version["GitCommit"] }}">{{ version["GitCommit"] }}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>GoVersion</strong>
+				</td>
 				<td>{{ version["GoVersion"] }}</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>KernelVersion</strong>
+				</td>
 				<td>{{ version["KernelVersion"] }}</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Os</strong>
+				</td>
 				<td>{{ version["Os"] }}</td>
-				<td>{{ version["Version"] }}</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Version</strong>
+				</td>
+				<td>
+					<a href="https://www.docker.com/">{{ version["Version"] }}</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 
-<div class="col-lg-4">
-	<h3></h3>
-
+<div class="col-lg-4 col-lg-offset-4">
 	<table class="table table-hover table-striped">
 		<thead>
 			<th>Repository</th>
@@ -47,9 +92,16 @@
 
 				{% set tags = [] %}
 				{% for tag in image["RepoTags"] %}
-					{% set tags = tags|merge([tag|split(":")|last]) %}
+					{% set tmp = tag|split(":")|last %}
+					{% if tmp != "<none>" %}
+					{% set tags = tags|merge([tag|split(":")|last|escape]) %}
+					{% endif %}
 				{% endfor %}
-				<td>{{ tags|join(" | ") }}</td>
+				<td>
+					{% if tags is not empty %}
+					<span class='label label-info'>{{ tags|join("</span> <span class='label label-info'>")|raw }}</span>
+					{% endif %}
+				</td>
 				<td>{{ image["Size"]|filesize }}</td>
 				<td>{{ image["VirtualSize"]|filesize }}</td>
 			</tr>
@@ -58,14 +110,15 @@
 	</table>
 </div>
 
-<div class="col-lg-4">
-	<h3></h3>
-
+<div class="col-lg-4 col-lg-offset-8">
 	<table class="table table-hover table-striped">
 		<thead>
 			<th>Name</th>
 			<th>Status</th>
 			<th>Execute since</th>
+			<th>
+				<i class="glyphicon glyphicon-wrench"></i>
+			</th>
 		</thead>
 
 		<tbody>
@@ -74,6 +127,21 @@
 				<td>{{ container["Names"]|join(" | ") }}</td>
 				<td>{{ container["Status"] }}</td>
 				<td>{{ container["Image"] }}</td>
+				<td>
+					<a data-stop="{{ container["Id"] }}">
+						<i class="glyphicon glyphicon-stop"></i>
+					</a>
+
+					{% if "Paused" in container["Status"] %}
+					<a data-play="{{ container["Id"] }}">
+						<i class="glyphicon glyphicon-play"></i>
+					</a>
+					{% else %}
+					<a data-pause="{{ container["Id"] }}">
+						<i class="glyphicon glyphicon-pause"></i>
+					</a>
+					{% endif %}
+				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
