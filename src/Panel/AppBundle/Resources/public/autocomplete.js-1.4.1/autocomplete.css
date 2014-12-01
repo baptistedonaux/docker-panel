@@ -1,0 +1,51 @@
+.autocomplete {
+	display: none;
+	position: absolute;
+	border: 1px solid rgb(128, 128, 128);
+	border-radius: 4px;
+	margin-top: 2px;
+	transition: all 0.5s ease 0s;
+}
+
+.autocomplete.open {
+	display: block;
+	transition: all 0.5s ease 0s;
+}
+
+.autocomplete:empty,
+.autocomplete.open:empty
+{
+	display: none;
+}
+
+.autocomplete:active,
+.autocomplete:focus,
+.autocomplete:hover
+{
+	background-color: #FAFAFA;
+	transition: all 0.5s ease 0s;
+}
+
+.autocomplete > ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.autocomplete > ul > li {
+	cursor: pointer;
+	padding: 5px 0 5px 10px;
+}
+
+.autocomplete > ul > li.locked {
+	cursor: inherit;
+}
+
+.autocomplete > ul > li:active,
+.autocomplete > ul > li:focus, 
+.autocomplete > ul > li:hover
+{
+	background-color: #EEEEEE;
+	font-weight: bold;
+	transition: all 0.5s ease 0s;
+}
