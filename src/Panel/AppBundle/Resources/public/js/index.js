@@ -18,7 +18,15 @@ function rebind()
 
 		request(url, function(response) {
 			if (response.success) {
-				that.parent().parent().remove();
+				that.parent().find("[data-pause] i.glyphicon.glyphicon-pause").remove();
+				that.parent().find("[data-stop] i.glyphicon.glyphicon-stop").remove();
+				that.parent().find("[data-play] i.glyphicon.glyphicon-play").remove();
+				that.parent().find("[data-trash] i.glyphicon.glyphicon-trash").remove();
+
+				that.parent().append("<a data-play='" + id + "'><i class='glyphicon glyphicon-play'></i></a>");
+				that.parent().append("<a data-trash='" + id + "'><i class='glyphicon glyphicon-trash'></i></a>");
+
+				rebind();
 			}
 		});
 	});
@@ -47,9 +55,30 @@ function rebind()
 
 		request(url, function(response) {
 			if (response.success) {
-				that.attr("data-pause", that.attr("data-play"));
+				that.attr("data-pause", id);
 				that.removeAttr("data-play");
 				that.find("i.glyphicon.glyphicon-play").attr("class", "glyphicon glyphicon-pause");
+
+				var trash = that.parent().find("[data-trash] i.glyphicon.glyphicon-trash").length;
+
+				if (trash > 0) {
+					that.parent().find("[data-trash] i.glyphicon.glyphicon-trash").remove();
+					that.parent().append("<a data-stop='" + id + "'><i class='glyphicon glyphicon-stop'></i></a>");
+				}
+				rebind();
+			}
+		});
+	});
+
+	$("[data-trash]").off("click");
+	$("[data-trash]").on("click", function() {
+		var that = $(this);
+		var id = that.attr("data-trash");
+		var url = Routing.generate("container_trash", {"id": id});
+
+		request(url, function(response) {
+			if (response.success) {
+				that.parent().parent().remove();
 				rebind();
 			}
 		});
@@ -57,6 +86,12 @@ function rebind()
 }
 
 rebind();
+
+$('[data-toggle]').popover({
+	trigger: "hover",
+	placement: "right",
+	html: true
+});
 
 AutoComplete({
 	post: function(result, response, custParams) {

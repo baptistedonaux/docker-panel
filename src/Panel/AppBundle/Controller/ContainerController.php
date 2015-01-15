@@ -45,7 +45,17 @@ class ContainerController extends Controller
      */
     public function play($id)
     {
-    	$this->container->get("docker.api.container")->play($id);
+        $this->container->get("docker.api.container")->play($id);
+
+        return new JsonResponse(array("success" => true));
+    }
+
+    /**
+     * @Route("/{id}/trash", name="container_trash", condition="request.headers.get('X-Requested-With') == 'XMLHttpRequest'", options={"expose"=true})
+     */
+    public function trash($id)
+    {
+    	$this->container->get("docker.api.container")->trash($id);
 
     	return new JsonResponse(array("success" => true));
     }

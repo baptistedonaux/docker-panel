@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
     	$version = $this->get("docker.api")->version();
-    	$containers = $this->get("docker.api.container")->ps();
+    	$containers = $this->get("docker.api.container")->ps(array("all" => true));
     	$images = $this->get("docker.api")->images();
 
     	return array("containers" => $containers, "images" => $images, "version" => $version);

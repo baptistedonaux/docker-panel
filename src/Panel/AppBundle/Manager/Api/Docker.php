@@ -49,6 +49,22 @@ class Docker
 		return $return;
 	}
 
+	public function delete($url)
+	{
+        $out = "DELETE ".$url." HTTP/1.1\r\nConnection: Close\r\n\r\n";
+
+		fwrite($this->socket, $out);
+
+		$return = array();
+		while (!feof($this->socket)) {
+			$return[] = fgets($this->socket);
+		}
+
+		$this->socket();
+
+		return $return;
+	}
+
 	public function images()
 	{
 		return self::decode($this->get("/images/json"));

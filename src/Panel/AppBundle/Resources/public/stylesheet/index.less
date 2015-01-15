@@ -20,7 +20,22 @@ div.col-lg-4 {
 	padding-top: 30px;
 }
 
-[data-remove], [data-stop] {
+// Panel right
+.col-lg-6.col-lg-offset-6 {
+	td:first-child .glyphicon {
+		&.glyphicon-play {
+			color: green;			
+		}
+		&.glyphicon-pause {
+			color: orange;
+		}
+		&.glyphicon-stop {
+			color: red;
+		}
+	}
+}
+
+[data-remove], [data-stop], [data-trash] {
 	.data-action(red);
 }
 

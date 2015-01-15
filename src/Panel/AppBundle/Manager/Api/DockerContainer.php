@@ -13,9 +13,17 @@ class DockerContainer
 		$this->docker = $docker;
 	}
 
-	public function ps()
+	public function ps(array $options = array())
 	{
-		return Docker::decode($this->docker->get("/containers/json"));
+		$path = "/containers/json";
+		if (!empty($options)) {
+			$path .= "?";
+			foreach ($options as $key => &$value) {
+				$path .= $key."=".$value."&";
+			}
+		}
+
+		return Docker::decode($this->docker->get($path));
 	}
 
 	public function stop($id)
@@ -31,5 +39,10 @@ class DockerContainer
 	public function play($id)
 	{
 		$this->docker->post("/containers/".$id."/unpause");
+	}
+
+	public function trash($id)
+	{
+		$this->docker->delete("/containers/".$id);
 	}
 }
