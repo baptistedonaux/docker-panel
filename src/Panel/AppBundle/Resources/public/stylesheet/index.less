@@ -9,15 +9,21 @@
 	}
 }
 
+.autocomplete() {
+	position: fixed;
+	background-color: rgba(255, 255, 255, 0.7);
+	top: 5px;
+}
+
 div.col-lg-2, div.col-lg-4, div.col-lg-6 {
 	height: 100%;
 	overflow-y: auto;
 	position: fixed;
 }
 
-div.col-lg-4 {
-	height: ~"calc(100% - 20px)";
-	padding-top: 30px;
+div.col-lg-4, div.col-lg-6 {
+	height: ~"calc(100% - 5px)";
+	padding-top: 40px;
 }
 
 // Panel right
@@ -47,9 +53,12 @@ div.col-lg-4 {
 	.data-action(green);
 }
 
-input[data-autocomplete] {
-	position: fixed;
-	background-color: rgba(255, 255, 255, 0.7);
+div.col-lg-4 input[data-autocomplete] {
 	width: ~"calc(33.3333% - 30px)";
-	top: 5px;
+	.autocomplete();
+}
+
+div.col-lg-6 input[data-autocomplete] {
+	width: ~"calc(50% - 30px)";
+	.autocomplete();
 }

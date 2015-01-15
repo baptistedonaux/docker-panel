@@ -115,7 +115,9 @@
 </div>
 
 <div class="col-lg-6 col-lg-offset-6">
-	<table class="table table-hover table-striped">
+	<input class="form-control" placeholder="Filter" data-autocomplete="{{ path("container_search", {}) }}" />
+
+	<table id="containers" class="table table-hover table-striped">
 		<thead>
 			<th>State</th>
 			<th>Name</th>

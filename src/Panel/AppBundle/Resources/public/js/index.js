@@ -83,17 +83,20 @@ function rebind()
 			}
 		});
 	});
+
+	$('[data-toggle]').popover({
+		trigger: "hover",
+		placement: "right",
+		html: true
+	});
 }
 
 rebind();
 
-$('[data-toggle]').popover({
-	trigger: "hover",
-	placement: "right",
-	html: true
-});
-
 AutoComplete({
+	selector: [
+		"div.col-lg-4 input[data-autocomplete]"
+	],
 	post: function(result, response, custParams) {
 		var tbody = document.querySelector("#images tbody");
 
@@ -118,6 +121,53 @@ AutoComplete({
 		};
 
         tbody.innerHTML = content;
+	}
+});
+
+AutoComplete({
+	selector: [
+		"div.col-lg-6 input[data-autocomplete]"
+	],
+	post: function(result, response, custParams) {
+		var tbody = document.querySelector("#containers tbody");
+
+		var content = "";
+		response = JSON.parse(response);
+		
+		var result = [];
+		var keys = Object.keys(response);
+
+		for (var i = keys.length - 1; i >= 0; i--) {
+			result.push(response[keys[i]]);
+		};
+
+		for (var i = result.length - 1; i >= 0; i--) {
+			content += "<tr><td><i class='glyphicon glyphicon-";
+
+			if (result[i]["Status"].indexOf("Paused") > -1) {
+				content += "pause";
+			} else if (result[i]["Status"].indexOf("Up") > -1 || result[i]["Status"].indexOf("Restarting") > -1) {
+				content += "play";
+			} else {
+				content += "stop";
+			}
+
+			var supply = '<span class="label label-info">' + result[i]["Names"].join('</span> <span class="label label-info">') + '</span>';
+
+			content += "'></i></td><td><button type='button' class='btn btn-xs btn-default' data-toggle='popover' title='Also available name' data-content='" + supply + "'>" + result[i]["Names"][0] + "</button></td><td>" + result[i]["Status"] + "</td><td>" + result[i]["Image"] + "</td><td>";
+
+			if (result[i]["Status"].indexOf("Paused") > -1) {
+				content += '<a data-stop="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-stop"></i></a><a data-play="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-play"></i></a>';
+			} else if (result[i]["Status"].indexOf("Up") > -1 || result[i]["Status"].indexOf("Restarting") > -1) {
+				content += '<a data-stop="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-stop"></i></a><a data-pause="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-pause"></i></a>';
+			} else {
+				content += '<a data-play="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-play"></i></a><a data-trash="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-trash"></i></a>';
+			}
+		};
+
+        tbody.innerHTML = content;
+
+        rebind();
 	}
 });
 

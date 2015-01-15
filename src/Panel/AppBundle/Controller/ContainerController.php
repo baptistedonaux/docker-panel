@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/container")
@@ -58,5 +59,32 @@ class ContainerController extends Controller
     	$this->container->get("docker.api.container")->trash($id);
 
     	return new JsonResponse(array("success" => true));
+    }
+
+    /**
+     * @Route("/search", name="container_search")
+     */
+    public function search(Request $request)
+    {
+        $containers = $this->container->get("docker.api")->containers();
+        foreach ($containers as $key => $container) {
+            $found = false;
+
+            if (strpos($container["Image"], $request->query->get("q")) !== false) {
+                $found = true;
+            } else {
+                foreach ($container["Names"] as $name) {
+                    if (strpos($name, $request->query->get("q")) !== false) {
+                        $found = true;
+                    }
+                }
+            }
+
+            if ($found === false) {
+                unset($containers[$key]);
+            }
+        }
+
+        return new JsonResponse($containers);
     }
 }

@@ -70,6 +70,11 @@ class Docker
 		return self::decode($this->get("/images/json"));
 	}
 
+	public function containers()
+	{
+		return self::decode($this->get("/containers/json"));
+	}
+
 	public function version()
 	{
 		$return = $this->get("/version");
