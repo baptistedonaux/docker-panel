@@ -18,7 +18,7 @@ class ImageController extends Controller
      */
     public function search(Request $request)
     {
-    	$images = $this->container->get("docker.api")->images();
+        $images = $this->container->get("docker.api")->images();
         foreach ($images as $key => $image) {
             $found = false;
             foreach ($image["RepoTags"] as $name) {
@@ -32,6 +32,16 @@ class ImageController extends Controller
             }
         }
 
-    	return new JsonResponse($images);
+        return new JsonResponse($images);
+    }
+
+    /**
+     * @Route("/{id}", name="image_get", condition="request.headers.get('X-Requested-With') == 'XMLHttpRequest'", options={"expose"=true})
+     */
+    public function get($id)
+    {
+    	$image = $this->container->get("docker.api.image")->get($id);
+
+    	return new JsonResponse($image);
     }
 }

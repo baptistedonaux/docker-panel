@@ -6,6 +6,7 @@
     {% javascripts
         '@PanelAppBundle/Resources/public/autocomplete.js-1.4.1/autocomplete.min.js'
         '@PanelAppBundle/Resources/public/js/index.js'
+        '@PanelAppBundle/Resources/public/js/template.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -91,7 +92,7 @@
 
 		<tbody>
 			{% for image in images %}
-			<tr>
+			<tr data-image="{{ image["Id"] }}">
 				<td>{{ image["RepoTags"]|first|split(':')|first }}</td>
 
 				{% set tags = [] %}

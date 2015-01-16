@@ -26,9 +26,20 @@ class ContainerController extends Controller
      */
     public function stop($id)
     {
-    	$this->container->get("docker.api.container")->stop($id);
+        $this->container->get("docker.api.container")->stop($id);
 
-    	return new JsonResponse(array("success" => true));
+        return new JsonResponse(array("success" => true));
+    }
+
+    /**
+     * @Route("/create/{image}", name="container_create", condition="request.headers.get('X-Requested-With') == 'XMLHttpRequest'", options={"expose"=true})
+     */
+    public function create(Request $request, $image)
+    {
+    	var_dump($this->container->get("docker.api.container")->create($image, $request));
+        die;
+
+    	return new JsonResponse(array("title" => "Image", "content" => "Content"));
     }
 
     /**

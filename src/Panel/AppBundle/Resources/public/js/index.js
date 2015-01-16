@@ -89,6 +89,103 @@ function rebind()
 		placement: "right",
 		html: true
 	});
+
+	$("[data-image]").off("click");
+	$("[data-image]").on("click", function() {
+		var that = $(this);
+
+		$.ajax({
+			url: Routing.generate("image_get", {"id": that.attr("data-image")}),
+		}).done(function(image) {
+			var title = "Create a new container";
+
+			var html = '<div class="modal-dialog"><form><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title">' + title + '</h4></div><div class="modal-body"><div><input type="text" name="name" placeholder="Container name" /></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button><button type="submit" class="btn btn-primary">Create a container</button></div></div></form></div>';
+
+			$("#modal").html(html);
+
+			$("#modal form").off("submit");
+			$("#modal form").on("submit", function() {
+				var form = $(this);
+
+				var name = form.find("input[name='name']").val();
+
+				$.ajax({
+					url: Routing.generate("container_create", {"image": that.attr("data-image")}) + "?name=" + name,
+					contentType: "application/json",
+					data: {
+						"Hostname":"",
+						"User":"",
+						"Memory":0,
+						"MemorySwap":0,
+						"AttachStdin":false,
+						"AttachStdout":true,
+						"AttachStderr":true,
+						"PortSpecs":null,
+						"Privileged": false,
+						"Tty":false,
+						"OpenStdin":false,
+						"StdinOnce":false,
+						"Env":null,
+						"Dns":null,
+						"Volumes":{},
+						"VolumesFrom":"",
+						"WorkingDir":"",
+						// "Hostname":"",
+						// "Domainname": "",
+						// "User":"",
+						// "Memory":0,
+						// "MemorySwap":0,
+						// "CpuShares": 0,
+						// "Cpuset": "0",
+						// "AttachStdin":false,
+						// "AttachStdout":true,
+						// "AttachStderr":true,
+						// "Tty":false,
+						// "OpenStdin":false,
+						// "StdinOnce":false,
+						// "Env":null,
+						// "Cmd":[
+						// 	"echo 'Hello World!'"
+						// ],
+						// "Entrypoint": "/bin/bash",
+						"Image": that.attr("data-image"),
+						// "Volumes":{
+						// },
+						// "WorkingDir":"",
+						// "NetworkDisabled": false,
+						// "MacAddress":false,
+						// "ExposedPorts":{
+						// 	"22/tcp": {}
+						// },
+						// "SecurityOpts": [],
+						// "HostConfig": {
+						// 	"Binds":["/tmp:/tmp"],
+						// 	"Links":["redis3:redis"],
+						// 	"LxcConf":{"lxc.utsname":"docker"},
+						// 	"PortBindings":{},
+						// 	"PublishAllPorts":false,
+						// 	"Privileged":false,
+						// 	"Dns": [""],
+						// 	"DnsSearch": [""],
+						// 	"VolumesFrom": [],
+						// 	"CapAdd": ["NET_ADMIN"],
+						// 	"CapDrop": ["MKNOD"],
+						// 	"RestartPolicy": {},
+						// 	"NetworkMode": "bridge",
+						// 	"Devices": []
+						// }
+					},
+					type: "POST",
+				}).done(function(response) {
+				});
+
+				return false;
+			});
+
+			$('#modal').modal('show');
+		});
+
+	});
 }
 
 rebind();
@@ -110,17 +207,14 @@ AutoComplete({
 			result.push(response[keys[i]]);
 		};
 
+		var content = "";
 		for (var i = result.length - 1; i >= 0; i--) {
-			content += "<tr><td>" + result[i]["RepoTags"][0].split(":").shift() + "</td>";
-
-			content += "<td>";
-			for (var j = result[i]["RepoTags"].length - 1; j >= 0; j--) {
-				content += "<span class='label label-info'>" + result[i]["RepoTags"][j].split(":").pop() + "</span> ";
-			};
-			content += "</td></td><td>" + filesize(result[i]["Size"]) + "</td><td>" + filesize(result[i]["VirtualSize"]) + "</td></tr>";
+			content += image(result[i]);
 		};
 
         tbody.innerHTML = content;
+
+        rebind();
 	}
 });
 
@@ -141,28 +235,9 @@ AutoComplete({
 			result.push(response[keys[i]]);
 		};
 
+		var content = "";
 		for (var i = result.length - 1; i >= 0; i--) {
-			content += "<tr><td><i class='glyphicon glyphicon-";
-
-			if (result[i]["Status"].indexOf("Paused") > -1) {
-				content += "pause";
-			} else if (result[i]["Status"].indexOf("Up") > -1 || result[i]["Status"].indexOf("Restarting") > -1) {
-				content += "play";
-			} else {
-				content += "stop";
-			}
-
-			var supply = '<span class="label label-info">' + result[i]["Names"].join('</span> <span class="label label-info">') + '</span>';
-
-			content += "'></i></td><td><button type='button' class='btn btn-xs btn-default' data-toggle='popover' title='Also available name' data-content='" + supply + "'>" + result[i]["Names"][0] + "</button></td><td>" + result[i]["Status"] + "</td><td>" + result[i]["Image"] + "</td><td>";
-
-			if (result[i]["Status"].indexOf("Paused") > -1) {
-				content += '<a data-stop="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-stop"></i></a><a data-play="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-play"></i></a>';
-			} else if (result[i]["Status"].indexOf("Up") > -1 || result[i]["Status"].indexOf("Restarting") > -1) {
-				content += '<a data-stop="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-stop"></i></a><a data-pause="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-pause"></i></a>';
-			} else {
-				content += '<a data-play="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-play"></i></a><a data-trash="' + result[i]["Id"] + '"><i class="glyphicon glyphicon-trash"></i></a>';
-			}
+			content += container(result[i]);
 		};
 
         tbody.innerHTML = content;

@@ -12,6 +12,11 @@ services:
         arguments:
             - @docker.api
 
+    docker.api.image:
+        class: Panel\AppBundle\Manager\Api\DockerImage
+        arguments:
+            - @docker.api
+
     docker.api.images:
         class: Panel\AppBundle\Manager\Api\DockerImage
         arguments:

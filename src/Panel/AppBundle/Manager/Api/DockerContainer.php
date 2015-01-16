@@ -31,6 +31,18 @@ class DockerContainer
 		$this->docker->post("/containers/".$id."/stop");
 	}
 
+	public function create($image, $options)
+	{
+		$name = $options->query->get("name");
+		$path = "/containers/create";
+
+		if ($name !== null) {
+			$path .= "?".$name;
+		}
+
+		return $this->docker->post($path, json_encode($options->request->all()));
+	}
+
 	public function pause($id)
 	{
 		$this->docker->post("/containers/".$id."/pause");
